@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สั่งซื้อของที่ระลึก 30 ปี CS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-blue-50 text-gray-800">
+
+
+    <div class="max-w-4xl mx-auto p-6">
+
+        <header class="mb-6 bg-blue-100 p-4 rounded-lg shadow flex item-center">
+            <img src="https://www.cs.mju.ac.th/assets/logo.aa2240c2.png" alt="โลโก้ร้านค้า" class="h-24 mr-4">
+            <div class="content-center">
+                <h1 class="text-3xl font-bold text-blue-700 ">แบบฟอร์มสั่งซื้อของที่ระลึก 30 ปี Comsci</h1>
+                <p class="text-sm text-black-600 ">กรุณากรอกข้อมูลให้ครบถ้วน</p>
+            </div>
+        </header>
+
+        <!-- ฟอร์ม -->
+        <form action="" method="get" class="bg-white p-6 rounded-lg shadow space-y-4">
+            <!-- ข้อมูลลูกค้า -->
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2">ข้อมูลลูกค้า</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="text" name="fullname" placeholder="ชื่อ - นามสกุล" required
+                    class="border p-2 rounded w-full">
+                <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์" required class="border p-2 rounded w-full">
+            </div>
+
+            <textarea name="address" rows="3" placeholder="ที่อยู่ในการจัดส่ง" required
+                class="border p-2 rounded w-full"></textarea>
+
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6">
+                <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">เพิ่มสินค้าที่ต้องการ</h1>
+
+                <div id="product-list" class="space-y-6">
+
+                </div>
+
+                <div class="flex justify-center mt-6">
+                    <button type="button" onclick="addProduct()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded shadow-md transition">
+                        + กดเพื่อเพิ่มสินค้า
+                    </button>
+                </div>
+            </div>
+
+
+
+            <div>
+                <label class="block font-medium mt-4">วิธีรับสินค้า</label>
+                <select name="delivery" required class="w-full border p-2 rounded">
+                    <option value="">-- เลือกวิธีรับสินค้า --</option>
+                    <option value="pickup">รับเองที่คณะ</option>
+                    <option value="delivery">จัดส่งตามที่อยู่</option>
+                </select>
+            </div>
+            <!-- ช่องทางชำระเงิน -->
+            <div>
+                <label class="block font-medium mt-4">ช่องทางชำระเงิน</label>
+                <select name="payment" required class="w-full border p-2 rounded">
+                    <option value="">-- เลือกช่องทางชำระเงิน --</option>
+                    <option value="bank">โอนผ่านบัญชีธนาคาร</option>
+                    <option value="promptpay">พร้อมเพย์</option>
+                    <option value="cash">เงินสด</option>
+                </select>
+            </div>
+
+            <!-- สลิปการชำระเงิน -->
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mt-4">แนบสลิปการชำระเงิน</h2>
+            <input type="file" name="slip" accept="image/*" required class="w-full border p-2 rounded">
+
+            <!-- วันที่ซื้อ -->
+            <div>
+                <label class="block font-medium mt-4">วันที่สั่งซื้อ</label>
+                <input type="date" name="purchasedate" required class="border p-2 rounded w-full">
+            </div>
+
+            <!-- ปุ่มส่ง -->
+            <div class="text-center mt-6">
+                <button type="submit"
+                    class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded">
+                    ส่งข้อมูลการสั่งซื้อ
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+
+<script>
+    let productCount = 0;
+
+    function addProduct() {
+        productCount++;
+        const container = document.getElementById('product-list');
+
+        const div = document.createElement('div');
+        div.className = 'product-item p-6 bg-blue-100 rounded-lg shadow relative';
+        div.id = `product-${productCount}`;
+
+        div.innerHTML = `
+        <button type="button"
+          class="absolute top-3 right-3 text-red-600 hover:text-red-800 font-bold text-xl"
+          title="ลบรายการนี้"
+          onclick="this.parentElement.remove()"
+        >
+          &times;
+        </button>
+
+        <h3 class="text-xl font-semibold mb-4 text-blue-700">สินค้า ${productCount}</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-medium mb-1" for="product-name-${productCount}">เลือกสินค้า</label>
+            <select
+              id="product-name-${productCount}"
+              name="product[${productCount}][name]"
+              onchange="updateFields(${productCount})"
+              required
+              class="w-full rounded border border-blue-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">-- เลือกสินค้า --</option>
+              <option value="เสื้อ">เสื้อ</option>
+              <option value="หมวก">หมวก</option>
+              <option value="กระเป๋า">กระเป๋า</option>
+              <option value="แก้วน้ำ">แก้วน้ำ</option>
+              <option value="ร่ม">ร่ม</option>
+              <option value="เข็มกลัด">เข็มกลัด</option>
+              <option value="สมุด">สมุด</option>
+              <option value="ปากกา">ปากกา</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1" for="product-qty-${productCount}">จำนวน</label>
+            <input
+              id="product-qty-${productCount}"
+              type="number"
+              name="product[${productCount}][qty]"
+              min="1"
+              value="1"
+              required
+              class="w-full rounded border border-blue-400 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <div id="extra-fields-${productCount}" class="mt-4 space-y-3 hidden"></div>
+      `;
+
+        container.appendChild(div);
+    }
+
+    function updateFields(index) {
+        const select = document.getElementById(`product-name-${index}`);
+        const extraFields = document.getElementById(`extra-fields-${index}`);
+        const value = select.value;
+        
+
+        // ซ่อนก่อน แล้วค่อยแสดงถ้ามี
+        extraFields.innerHTML = '';
+        extraFields.classList.add('hidden');
+
+        if (value === "เสื้อ") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">ขนาด</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="XS">XS</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="shirt-white">สีขาว</option>
+              <option value="shirt-black">สีดำ</option>
+              <option value="shirt-blue">สีน้ำเงิน</option>
+              <option value="shirt-gray">สีเทา</option>
+            </select>
+
+          </div>
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "หมวก") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">รอบศีรษะ (cm)</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="Small">55-57 ซม.</option>
+              <option value="Medium">58-60 ซม.</option>
+              <option value="Large">60-62 ซม.</option>
+            </select>
+          </div>
+           <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="hat-red">สีแดง</option>
+              <option value="hat-white">สีขาว</option>
+              <option value="rat-black">สีดำ</option>
+            </select>
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "กระเป๋า") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">ขนาด</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="small">เล็ก</option>
+              <option value="medium">กลาง</option>
+              <option value="large">ใหญ่</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="bag-red">สีแดง</option>
+              <option value="bag-blue">สีน้ำเงิน</option>
+              <option value="bag-black">สีดำ</option>
+              <option value="bag-green">สีเขียว</option>
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "แก้วน้ำ") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">ขนาด</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="small">เล็ก</option>
+              <option value="large">ใหญ่</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="glass-white">สีขาว</option>
+              <option value="glass-blue">สีน้ำเงิน</option>
+              <option value="glass-black">สีดำ</option>
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "ร่ม") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="umbella-blue">สีน้ำเงิน</option>
+              <option value="umbella-black">สีดำ</option>
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "เข็มกลัด") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="brooch-white">สีขาว</option>
+              <option value="brooch-green">สีเขียว</option>
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+        else if (value === "สมุด") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">ขนาด</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="small">A5</option>
+              <option value="medium">B5</option>
+              <option value="large">A4</option>
+
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else if (value === "ปากกา") {
+            extraFields.innerHTML = `
+          <div>
+            <label class="block font-medium mb-1">ขนาดหัวปากกา</label>
+            <select name="product[${index}][size]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกขนาด --</option>
+              <option value="small">0.3 มม.</option>
+              <option value="medium">0.5 มม.</option>
+              <option value="large">0.7 มม.</option>
+
+            </select>
+          </div>
+
+            <div>
+            <label class="block font-medium mb-1">สี</label>
+            <select name="product[${index}][Color]" class="w-full border rounded px-3 py-2">
+              <option value="">-- เลือกสี --</option>
+              <option value="pen-black">สีดำ</option>
+              <option value="pen-blue">สีน้ำเงิน</option>
+              <option value="pen-red">สีแดง</option>
+
+            </select>
+          </div>
+
+        `;
+            extraFields.classList.remove('hidden');
+        }
+
+        else {
+            extraFields.innerHTML = `<div class="text-gray-500 italic">ไม่มีรายละเอียดเพิ่มเติมสำหรับสินค้านี้</div>`;
+            extraFields.classList.remove('hidden');
+        }
+
+
+    }
+</script>
+
+</html>
